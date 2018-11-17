@@ -177,6 +177,15 @@ while (intersect(update_centroids(K, centroid_list), centroid_list) < K):
 
 print('CONVERGENCE!')
 
+
+def sse():
+    total_sqare_dist = 0
+    for tweet in data:
+        total_sqare_dist += jaccard(tweet['text'], getTweet(tweet['centroid'])['text'])**2
+    return total_sqare_dist
+
+
+# output to text file
 clusters = []
 for centroid in centroid_list:
     cluster = []
@@ -184,11 +193,9 @@ for centroid in centroid_list:
         cluster.append(tweet['id'])
     clusters.append(cluster)
 
-f = open(args.outputFile, "w+")
+f = open("output.txt", "w+")
 for idx, centroid in enumerate(centroid_list):
     tweets = ', '.join(str(s) for s in clusters[idx])
     f.write('{0} {1}\n'.format(idx, tweets))
+f.write('\n\nSSE: {0} \nSSE/#tweets: {1}'.format(sse(), sse()/len(data)))
 f.close()
-
-
-# In[ ]:
